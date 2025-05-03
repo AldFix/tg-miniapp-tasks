@@ -1,89 +1,54 @@
-let currentProject = null;
-let userId = Telegram.WebApp.initDataUnsafe.user?.id || "demo";
+const firebaseConfig = {
+  apiKey: "AIzaSyB-SWL22l5mvvzJvhpBR6tUkTtifgSfsZM",
+  authDomain: "telegramminiapptasks.firebaseapp.com",
+  databaseURL: "https://telegramminiapptasks-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "telegramminiapptasks",
+  storageBucket: "telegramminiapptasks.appspot.com",
+  messagingSenderId: "95276291",
+  appId: "1:95276291:web:2ca466b0ea6c37d648ed36",
+  measurementId: "G-G1TM0NNT4B"
+};
 
-function loadProjects() {
-  const projects = JSON.parse(localStorage.getItem("projects_" + userId)) || [];
-  const list = document.getElementById("project-list");
-  list.innerHTML = "";
-  projects.forEach((project) => {
-    const li = document.createElement("li");
-    li.textContent = project.name;
-    li.onclick = () => enterProject(project.name);
-    list.appendChild(li);
-  });
-}
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-function saveProjects(projects) {
-  localStorage.setItem("projects_" + userId, JSON.stringify(projects));
-}
+const tg = window.Telegram.WebApp;
+tg.expand();
+
+const userId = tg.initDataUnsafe.user?.id || "unknown";
 
 function createProject() {
   const name = document.getElementById("project-name").value.trim();
-  if (!name) return alert("Введите название проекта");
-  const projects = JSON.parse(localStorage.getItem("projects_" + userId)) || [];
-  if (projects.find(p => p.name === name)) return alert("Проект уже существует");
-  projects.push({ name });
-  saveProjects(projects);
-  loadProjects();
-  document.getElementById("project-name").value = "";
-}
+  if (!name) return;
 
-function enterProject(name) {
-  currentProject = name;
-  document.getElementById("project-view").style.display = "none";
-  document.getElementById("task-view").style.display = "block";
-  document.getElementById("current-project-name").textContent = name;
-  loadTasks();
-}
-
-function backToProjects() {
-  document.getElementById("project-view").style.display = "block";
-  document.getElementById("task-view").style.display = "none";
-  currentProject = null;
-  loadProjects();
-}
-
-function getTaskKey() {
-  return "tasks_" + userId + "_" + currentProject;
-}
-
-function loadTasks() {
-  const tasks = JSON.parse(localStorage.getItem(getTaskKey())) || [];
-  const list = document.getElementById("task-list");
-  list.innerHTML = "";
-  tasks.forEach((task, index) => {
-    const li = document.createElement("li");
-    li.textContent = task;
-    const btn = document.createElement("button");
-    btn.textContent = "❌";
-    btn.onclick = () => deleteTask(index);
-    li.appendChild(btn);
-    list.appendChild(li);
+  const newRef = db.ref("projects").push();
+  newRef.set({
+    name,
+    createdBy: userId,
+    users: {
+      [userId]: true
+    }
+  }).then(() => {
+    alert("Проект создан");
+    document.getElementById("project-name").value = "";
+    loadProjects();
   });
 }
 
-function saveTasks(tasks) {
-  localStorage.setItem(getTaskKey(), JSON.stringify(tasks));
+function loadProjects() {
+  db.ref("projects").once("value", (snapshot) => {
+    const container = document.getElementById("project-list");
+    container.innerHTML = "";
+    snapshot.forEach((child) => {
+      const data = child.val();
+      if (data.users && data.users[userId]) {
+        const div = document.createElement("div");
+        div.className = "project-item";
+        div.innerText = data.name;
+        container.appendChild(div);
+      }
+    });
+  });
 }
 
-function addTask() {
-  const input = document.getElementById("task-input");
-  const task = input.value.trim();
-  if (!task) return;
-  const tasks = JSON.parse(localStorage.getItem(getTaskKey())) || [];
-  tasks.push(task);
-  saveTasks(tasks);
-  loadTasks();
-  input.value = "";
-}
-
-function deleteTask(index) {
-  const tasks = JSON.parse(localStorage.getItem(getTaskKey())) || [];
-  tasks.splice(index, 1);
-  saveTasks(tasks);
-  loadTasks();
-}
-
-window.onload = () => {
-  loadProjects();
-};
+window.addEventListener("load", loadProjects);
