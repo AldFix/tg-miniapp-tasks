@@ -3,12 +3,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "ТВОЙ_API_KEY",
-  authDomain: "ТВОЙ_PROJECT_ID.firebaseapp.com",
-  projectId: "ТВОЙ_PROJECT_ID",
-  storageBucket: "ТВОЙ_PROJECT_ID.appspot.com",
-  messagingSenderId: "ТВОЙ_SENDER_ID",
-  appId: "ТВОЙ_APP_ID"
+  apiKey: "AIzaSyB-SWL22l5mvvzJvhpBR6tUkTtifgSfsZM",
+  authDomain: "telegramminiapptasks.firebaseapp.com",
+  databaseURL: "https://telegramminiapptasks-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "telegramminiapptasks",
+  storageBucket: "telegramminiapptasks.firebasestorage.app",
+  messagingSenderId: "95276291",
+  appId: "1:95276291:web:2ca466b0ea6c37d648ed36",
+  measurementId: "G-G1TM0NNT4B"
 };
 
 const app = initializeApp(firebaseConfig);
