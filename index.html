@@ -2,29 +2,23 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Задачи</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Задачи в Telegram Mini App</title>
+  <link rel="stylesheet" href="styles.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
-    <div id="project-view">
-      <h2>Создать проект</h2>
+    <h1>Мои проекты</h1>
+    <div id="project-list"></div>
+    <div class="project-form">
       <input type="text" id="project-name" placeholder="Название проекта" />
       <button onclick="createProject()">Создать</button>
-      <h3>Список проектов</h3>
-      <ul id="project-list"></ul>
-    </div>
-
-    <div id="task-view" style="display:none;">
-      <h2 id="current-project-name"></h2>
-      <input type="text" id="task-input" placeholder="Новая задача" />
-      <button onclick="addTask()">Добавить</button>
-      <ul id="task-list"></ul>
-      <button onclick="backToProjects()">← Назад к проектам</button>
     </div>
   </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
