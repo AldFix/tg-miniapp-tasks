@@ -1,16 +1,28 @@
+document.getElementById('createProjectBtn').addEventListener('click', createProject);
 
-import { addProjectToFirestore } from './firebase.js';
+function createProject() {
+  const projectName = document.getElementById('projectName').value.trim();
+  if (!projectName) {
+    alert('Введите название проекта');
+    return;
+  }
 
-window.Telegram.WebApp.ready();
+  // Получение Telegram ID пользователя
+  const telegramUserId = Telegram.WebApp.initDataUnsafe.user.id;
 
-document.getElementById("createProjectBtn").addEventListener("click", async () => {
-  const projectName = document.getElementById("projectName").value;
-  if (!projectName) return alert("Введите название проекта");
-
-  const userId = Telegram.WebApp.initDataUnsafe?.user?.id;
-  if (!userId) return alert("Не удалось определить пользователя");
-
-  await addProjectToFirestore(projectName, userId);
-
-  alert("Проект создан!");
-});
+  // Сохранение проекта в Firebase Realtime Database
+  const projectRef = database.ref('projects').push();
+  projectRef.set({
+    name: projectName,
+    owner: telegramUserId,
+    createdAt: Date.now()
+  })
+  .then(() => {
+    alert('Проект успешно создан');
+    document.getElementById('projectName').value = '';
+  })
+  .catch((error) => {
+    console.error('Ошибка при создании проекта:', error);
+    alert('Ошибка при создании проекта');
+  });
+}
