@@ -1,78 +1,30 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Задачи</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      max-width: 400px;
-      margin: auto;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-  </style>
 </head>
 <body>
+  <div class="container">
+    <div id="project-view">
+      <h2>Создать проект</h2>
+      <input type="text" id="project-name" placeholder="Название проекта" />
+      <button onclick="createProject()">Создать</button>
+      <h3>Список проектов</h3>
+      <ul id="project-list"></ul>
+    </div>
 
-  <h2>Создать проект</h2>
-  <input type="text" id="projectName" placeholder="Название проекта" />
-  <button id="createProjectBtn">Создать</button>
-
-  <script>
-    // 1. Telegram WebApp init
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-
-    // 2. Firebase init
-    const firebaseConfig = {
-      apiKey: "AIzaSyB-SWL22l5mvvzJvhpBR6tUkTtifgSfsZM",
-      authDomain: "telegramminiapptasks.firebaseapp.com",
-      databaseURL: "https://telegramminiapptasks-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "telegramminiapptasks",
-      storageBucket: "telegramminiapptasks.appspot.com",
-      messagingSenderId: "95276291",
-      appId: "1:95276291:web:2ca466b0ea6c37d648ed36"
-    };
-
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    // 3. Create project
-    document.getElementById('createProjectBtn').addEventListener('click', () => {
-      const projectName = document.getElementById('projectName').value.trim();
-      if (!projectName) return alert("Введите название проекта");
-
-      const userId = tg.initDataUnsafe?.user?.id;
-      if (!userId) return alert("Не удалось получить Telegram ID");
-
-      const newProjectRef = db.ref('projects').push();
-      newProjectRef.set({
-        name: projectName,
-        owner: userId,
-        createdAt: new Date().toISOString()
-      }).then(() => {
-        alert('Проект создан!');
-        document.getElementById('projectName').value = '';
-      }).catch((err) => {
-        alert('Ошибка при создании проекта: ' + err.message);
-      });
-    });
-  </script>
-   <div id="project-list">
-    <h3>Мои проекты:</h3>
-    <ul id="projects"></ul>
+    <div id="task-view" style="display:none;">
+      <h2 id="current-project-name"></h2>
+      <input type="text" id="task-input" placeholder="Новая задача" />
+      <button onclick="addTask()">Добавить</button>
+      <ul id="task-list"></ul>
+      <button onclick="backToProjects()">← Назад к проектам</button>
+    </div>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
