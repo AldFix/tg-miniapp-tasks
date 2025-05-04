@@ -1,24 +1,33 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Задачи в Telegram Mini App</title>
-  <link rel="stylesheet" href="styles.css" />
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaGFix</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
+  <div id="main">
     <h1>Мои проекты</h1>
-    <div id="project-list"></div>
-    <div class="project-form">
-      <input type="text" id="project-name" placeholder="Название проекта" />
-      <button onclick="createProject()">Создать</button>
-    </div>
+    <ul id="project-list"></ul>
+    <input id="new-project-name" placeholder="Название проекта">
+    <button onclick="createProject()">Создать</button>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <div id="project-view" class="hidden">
+    <button onclick="backToMain()">← Назад</button>
+    <h2 id="project-title"></h2>
+    <table id="task-table">
+      <thead>
+        <tr><th>Задача</th><th>Теги</th><th>Статус</th><th></th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <input id="new-task" placeholder="Новая задача">
+    <button onclick="addTask()">Добавить</button>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
